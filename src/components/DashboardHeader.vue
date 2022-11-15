@@ -17,7 +17,7 @@ export default defineComponent({
   },
   methods: {
     //control the nav bar visibility
-    toggleSidebar() {},
+    toggleSidebar() { },
     ...mapActions(useAuthStore, ["logoutRequest"]),
   },
   computed: {
@@ -75,7 +75,7 @@ export default defineComponent({
         </RouterLink>
       </div>
       <!--account option-->
-      <div class="account__options d-none" >
+      <div class="account__options d-none">
         <!--the user image or use the default-->
         <div class="avatar">
           <img src="@/assets/img/illustration/default_user.png" alt="user" />
@@ -200,8 +200,9 @@ sup {
     left: 0;
     z-index: 1200;
     width: 100%;
-    background-color: var(--primary);
-    color: var(--white);
+    background-color: var(--border-color);
+    color: var(--default-dark);
+    display: none;
   }
 
   /** hide desktop greeting */

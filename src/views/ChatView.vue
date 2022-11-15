@@ -15,52 +15,10 @@ export default defineComponent({
     data: () => ({
         crumbs: ["Home", "Category", "Sub category"],
         showSidebar: false,
-        userTheme: "light-theme"
+        userTheme: "light-theme",
+        newMessage: "",
+        messages: [] as Array<any>
     }),
-    /**
-     * before entering the route we check if the user is logged in
-     * to do this, try to get the token from the  local storage
-     * if token does not exists, redirect to login page
-     * else use the token to make request to the server, if the server return a valid response, enter this routes else redirect to login page
-     */
-    /*beforeRouteEnter(to, from, next) {
-      // async function checkBearerTokenValidity() {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        next("/login");
-      } else {
-        //try to get the user information from the server
-        try {
-          axios
-            .get("/auth/me", {
-              headers: { Authorization: `Bearer ${token}` },
-            })
-            .then((severResponse) => {
-              const responseData = severResponse.data;
-  
-              if (responseData.success) {
-                next(() => {
-                  console.log("user is logged in ", from.name, to.name);
-                  const desiredRoute = String(to.name);
-                  router.push({ name: desiredRoute });
-                });
-              } else {
-                localStorage.removeItem("token");
-                router.push({ name: "auth" });
-                console.log("something bad happened ");
-              }
-            });
-  
-          // console.log({ response });
-        } catch (error: any) {
-          console.log({ error: error.message });
-          console.log("something bad happened ");
-        }
-      }
-      // }
-      // checkBearerTokenValidity();
-    },
-    */
 
     computed: {
         ...mapState(useAuthStore, ["authorizationToken", "userInformation"]),
@@ -93,6 +51,18 @@ export default defineComponent({
             refreshToken: "getRefreshToken",
         }),
         ...mapActions(useDarkMode, ["toggleColorTheme"]),
+        // add message to the chat ui
+        sendMessage() {
+            const payload: any = {
+                user: "me",
+                timestamp: new Date().getTime(),
+                message: this.newMessage,
+            };
+            this.messages.push(payload);
+            console.log(JSON.stringify(payload));
+
+            this.newMessage = "";
+        },
         getTheme() {
             return localStorage.getItem("user-theme");
         },
@@ -138,11 +108,16 @@ export default defineComponent({
         <main>
             <!-- the header-->
             <DashboardHeader @open-sidebar="showSidebar = !showSidebar" />
-
             <!--inject all views here-->
             <div id="view__box" :class="{ 'dark__mode': enabledDarkMode }">
-                <form action="" id="message__box">
-                    <input type="text" placeholder="type a message">
+                <div id="conversation">
+                    <!-- messages {{ messages }} -->
+                </div>
+                <form action="" id="message__box" @submit="sendMessage">
+                    <div id="input__field">
+                        <input type="text" placeholder="type a message" v-model="newMessage">
+                        <Icon icon="mdi:send" id="send__icon" @click="sendMessage" />
+                    </div>
                 </form>
 
             </div>
@@ -151,82 +126,93 @@ export default defineComponent({
 </template>
 
 <style scoped>
-#message__box {
-    width: 100%;
-    position: absolute;
-    bottom: 10px;
-    left: 0;
-    align-items: center;
-    margin: 0 auto;
+main {
+    background-image: url("@/assets/img/bg/wallpaper.jpg"), linear-gradient(to right, rgba(0, 0, 0, .5), rgba(0, 0, 0, .95));
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: fixed;
 }
 
-#message__box form {
-    width: 100%
+#conversation {
+    color: #fff;
+    padding: 5px 10px;
 }
+
+#input__field {
+    position: relative;
+    width: 100%;
+}
+
+#send__icon {
+    position: absolute;
+    right: 15px;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    color: var(--secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+#message__box {
+    width: 100%;
+    display: flex;
+    text-align: center;
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    /* background-color: var(--primary); */
+    padding: 10px;
+}
+
+
 
 #message__box input {
     width: 90%;
     background-color: var(--border-color);
-    padding: 12.5px 10px;
+    padding: 10.5px 10px;
     border-radius: 25px;
     padding-left: 15px;
+    margin: 0 auto;
 }
 
 #message__box ::placeholder {
     font-size: 13.5px;
-    padding-left: 25px;
+    padding-left: 15px;
 }
 
-
-main {
-    grid-area: content;
-    height: 80vh;
-    overflow-y: hidden;
-    scrollbar-color: var(--primary);
+#message__box input {
+    /* width: 500px; */
+    width: 100%;
+    height: 50px;
+    border-radius: 8px;
+    padding: 7px 25px 7px 25px;
+    border: 1.5px solid var(--border-color);
+    border-radius: 5px;
+    display: block;
+    font-size: 14px;
 }
 
-main header {
-    grid-area: header;
+#message__box input::placeholder {
+    display: inline-block;
+    letter-spacing: 1.25px;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 21px;
+    letter-spacing: 0em;
+    text-align: left;
 }
 
+#message__box input:focus {
+    outline: none;
+    border: none;
+}
 
-
-/**------------------styling on mobile devices----------------------- */
-@media screen and (max-width: 768px) {
-    .container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-    }
-
-    nav {
-        /* height: unset !important; */
-        /* padding-top: 55px; */
-        position: fixed;
-        z-index: 5000;
-        top: 0;
-        left: 0;
-        width: 100%;
-        box-shadow: 4px 17px 31px -3px rgba(64, 60, 82, 0.6);
-        -webkit-box-shadow: 4px 17px 31px -3px rgba(64, 60, 82, 0.6);
-        -moz-box-shadow: 4px 17px 31px -3px rgba(64, 60, 82, 0.6);
-        height: 90vh;
-    }
-
-    main {
-        height: unset;
-        overflow-y: scroll;
-    }
-
-    main header {
-        height: unset;
-    }
-
-    main #view__box {
-        grid-area: view;
-        min-height: calc(100vh - 20px);
-        padding-top: unset;
-        margin-bottom: 25px;
-    }
+main #view__box {
+    grid-area: view;
+    min-height: calc(100vh - 80px);
+    padding-top: unset;
+    margin-bottom: 25px;
 }
 </style>
