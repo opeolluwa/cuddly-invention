@@ -104,12 +104,12 @@ export default defineComponent({
 </script>
 
 <template>
-    <div class="container">
+    <div>
         <main>
             <!-- the header-->
             <DashboardHeader @open-sidebar="showSidebar = !showSidebar" />
             <!--inject all views here-->
-            <div id="view__box" :class="{ 'dark__mode': enabledDarkMode }">
+            <div>
                 <div id="conversation">
                     <!-- messages {{ messages }} -->
                 </div>
@@ -117,6 +117,8 @@ export default defineComponent({
                     <div id="input__field">
                         <input type="text" placeholder="type a message" v-model="newMessage">
                         <Icon icon="mdi:send" id="send__icon" @click="sendMessage" />
+                        <Icon icon="mdi:smile" id="send__icon" @click="sendMessage" />
+
                     </div>
                 </form>
 
@@ -132,6 +134,8 @@ main {
     background-repeat: no-repeat;
     background-position: center;
     background-attachment: fixed;
+    height: 100vh !important;
+    position: relative;
 }
 
 #conversation {
@@ -139,10 +143,7 @@ main {
     padding: 5px 10px;
 }
 
-#input__field {
-    position: relative;
-    width: 100%;
-}
+
 
 #send__icon {
     position: absolute;
@@ -155,15 +156,21 @@ main {
     cursor: pointer;
 }
 
-#message__box {
+#input__field {
     width: 100%;
     display: flex;
-    text-align: center;
+    align-items: center;
     position: absolute;
-    bottom: 0px;
+    bottom: 0;
     left: 0;
-    /* background-color: var(--primary); */
-    padding: 10px;
+}
+
+#message__box {
+    width: 90%;
+    display: flex;
+    text-align: center;
+    min-height: calc(100vh - 80px);
+    margin: 0 auto;
 }
 
 
@@ -207,12 +214,5 @@ main {
 #message__box input:focus {
     outline: none;
     border: none;
-}
-
-main #view__box {
-    grid-area: view;
-    min-height: calc(100vh - 80px);
-    padding-top: unset;
-    margin-bottom: 25px;
 }
 </style>
