@@ -49,7 +49,7 @@ export default defineComponent({
   <header class="view">
     <!--navigation button for small devices go here-->
     <div class="header__nav__mobile">
-      <Icon icon="mdi:menu" @click="$emit('open-sidebar')" />
+      <!-- <Icon icon="mdi:menu" @click="$emit('open-sidebar')" /> -->
       <div id="current__route">
         <RouterLink :to="{ name: 'home' }">{{ currentRouteName }}</RouterLink>
       </div>
@@ -75,7 +75,7 @@ export default defineComponent({
         </RouterLink>
       </div>
       <!--account option-->
-      <div class="account__options">
+      <div class="account__options d-none" >
         <!--the user image or use the default-->
         <div class="avatar">
           <img src="@/assets/img/illustration/default_user.png" alt="user" />
@@ -212,6 +212,7 @@ sup {
   .header__nav__mobile {
     display: flex;
     align-items: center;
+    padding: 7px 5px;
     /* column-gap: -15px; */
   }
 

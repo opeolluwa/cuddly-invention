@@ -14,8 +14,13 @@ const router = createRouter({
       component: OnboardingView,
     },
     {
-      name: "auth",
       path: "/",
+      name: "chat",
+      component:()=> import('@/views/ChatView.vue')
+    },
+    {
+      name: "auth",
+      path: "/auth",
       component: AuthenticationView,
       children: [
         {
