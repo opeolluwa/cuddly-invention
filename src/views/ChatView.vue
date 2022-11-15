@@ -169,7 +169,7 @@ main {
     width: 90%;
     display: flex;
     text-align: center;
-    min-height: calc(100vh - 80px);
+    min-height: calc(100vh - 30px);
     margin: 0 auto;
 }
 
